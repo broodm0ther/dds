@@ -3,52 +3,112 @@
 {% block title %}Архив записей{% endblock %}
 
 {% block content %}
-<h1>Архив записей</h1>
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-lg dark:shadow-gray-700 rounded-lg
+            max-w-full sm:max-w-lg md:max-w-3xl lg:max-w-5xl space-y-6">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+    Архив записей
+  </h1>
 
-<form method="get" action="/archive">
-    <label for="patient_id">Выберите пациента:</label>
-    <select id="patient_id" name="patient_id" required onchange="this.form.submit()">
-        <option value="0" {% if not selected_patient_id or selected_patient_id == 0 %}selected{% endif %}>Все пациенты</option>
+  <form method="get" action="/archive"
+        class="flex flex-wrap items-end gap-4 sm:gap-6 mb-6">
+    <div class="w-full sm:w-1/2 lg:w-1/3">
+      <label for="patient_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Выберите пациента:
+      </label>
+      <select
+        id="patient_id"
+        name="patient_id"
+        required
+        onchange="this.form.submit()"
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100
+               p-2 focus:border-blue-500 dark:focus:border-blue-400
+               focus:ring-blue-500 dark:focus:ring-blue-400"
+      >
+        <option value="0" {% if not selected_patient_id or selected_patient_id == 0 %}selected{% endif %}>
+          Все пациенты
+        </option>
         {% for patient in patients %}
-            <option value="{{ patient.id }}" {% if selected_patient_id and patient.id == selected_patient_id %}selected{% endif %}>
-                {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}
-            </option>
+          <option value="{{ patient.id }}"
+            {% if selected_patient_id and patient.id == selected_patient_id %}selected{% endif %}>
+            {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}
+          </option>
         {% endfor %}
-    </select>
-    
-    <label for="sort">Сортировать по дате:</label>
-    <select id="sort" name="sort" onchange="this.form.submit()">
-         <option value="desc" {% if sort == 'desc' %}selected{% endif %}>Новые - Старые</option>
-         <option value="asc" {% if sort == 'asc' %}selected{% endif %}>Старые - Новые</option>
-    </select>
-</form>
+      </select>
+    </div>
 
-{% if appointments %}
-    <h2>Прошедшие записи</h2>
-    <table border="1" style="width:100%; border-collapse:collapse; margin-top:20px;">
-        <tr>
-            <th>Дата</th>
-            <th>Время</th>
-            <th>Пациент</th>
-            <th>Врач</th>
-            <th>Статус услуги</th>
-            <th>Лекарства</th>
-        </tr>
-        {% for appointment in appointments %}
+    <div class="w-full sm:w-1/2 lg:w-1/3">
+      <label for="sort" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Сортировать по дате:
+      </label>
+      <select
+        id="sort"
+        name="sort"
+        onchange="this.form.submit()"
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100
+               p-2 focus:border-blue-500 dark:focus:border-blue-400
+               focus:ring-blue-500 dark:focus:ring-blue-400"
+      >
+        <option value="desc" {% if sort == 'desc' %}selected{% endif %}>Новые – Старые</option>
+        <option value="asc" {% if sort == 'asc' %}selected{% endif %}>Старые – Новые</option>
+      </select>
+    </div>
+  </form>
+
+  {% if appointments %}
+    <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+      Прошедшие записи
+    </h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Дата</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Время</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Пациент</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Врач</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Статус</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Лекарства</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          {% for appointment in appointments %}
             <tr>
-                <td>{{ appointment.appointment_day.strftime('%d.%m.%Y') }}</td>
-                <td>{{ appointment.appointment_time }}</td>
-                <td>{{ appointment.patient.last_name }} {{ appointment.patient.first_name }} {{ appointment.patient.patronymic }}</td>
-                <td>{{ appointment.doctor.last_name }} {{ appointment.doctor.first_name }} {{ appointment.doctor.patronymic }}</td>
-                <td>{{ appointment.status }}</td>
-                <td>
-                    <a href="/medications/{{ appointment.id }}" class="medications-btn">Лекарства</a>
-                </td>
+              <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+                {{ appointment.appointment_day.strftime('%d.%m.%Y') }}
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+                {{ appointment.appointment_time }}
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+                {{ appointment.patient.last_name }} {{ appointment.patient.first_name }} {{ appointment.patient.patronymic }}
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+                {{ appointment.doctor.last_name }} {{ appointment.doctor.first_name }} {{ appointment.doctor.patronymic }}
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+                {{ appointment.status }}
+              </td>
+              <td class="px-4 py-3">
+                <a
+                  href="/medications/{{ appointment.id }}"
+                  class="inline-block px-3 py-1 bg-blue-600 dark:bg-blue-500 text-white text-sm font-medium
+                         rounded hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none
+                         focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                >
+                  Лекарства
+                </a>
+              </td>
             </tr>
-        {% endfor %}
-    </table>
-{% elif selected_patient_id %}
-    <p style="color:red; font-weight:bold;">Для выбранного пациента нет прошедших записей.</p>
-{% endif %}
-
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% elif selected_patient_id %}
+    <p class="text-red-600 dark:text-red-400 font-semibold mt-6">
+      Для выбранного пациента нет прошедших записей.
+    </p>
+  {% endif %}
+</div>
 {% endblock %}

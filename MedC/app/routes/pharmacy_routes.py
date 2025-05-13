@@ -7,9 +7,6 @@ from app.database import get_db
 
 router = APIRouter()
 
-@router.get("/pharmacy")
-def list_all(db: Session = Depends(get_db), current_user = Depends(require_roles("admin"))):
-    return db.query(PharmacyDrug).all()
 
 @router.get("/pharmacy/expired")
 def list_expired(db: Session = Depends(get_db), current_user = Depends(require_roles("admin"))):

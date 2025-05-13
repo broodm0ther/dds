@@ -3,63 +3,145 @@
 {% block title %}Поиск записей{% endblock %}
 
 {% block content %}
-<h1>Поиск записей по пациенту</h1>
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-lg
+            max-w-full sm:max-w-lg lg:max-w-5xl space-y-6 transition-colors">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+    Поиск записей по пациенту
+  </h1>
 
-<form action="/search/appointments" method="post">
-    <label for="full_name">Введите ФИО пациента:</label>
-    <input type="text" id="full_name" name="full_name" required>
-    <button type="submit">Найти</button>
-</form>
+  <form action="/search/appointments" method="post"
+        class="flex flex-col sm:flex-row flex-wrap items-center gap-4 mb-6">
+    <div class="flex-1 min-w-[200px]">
+      <label for="full_name"
+             class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Введите ФИО пациента:
+      </label>
+      <input
+        type="text"
+        id="full_name"
+        name="full_name"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <button
+      type="submit"
+      class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white font-medium rounded-md
+             hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+    >
+      Найти
+    </button>
+  </form>
 
-{% if error %}
-<p style="color: red;">{{ error }}</p>
-{% endif %}
+  {% if error %}
+    <p class="text-red-600 dark:text-red-400 font-medium">
+      {{ error }}
+    </p>
+  {% endif %}
 
-{% if appointments %}
-<h2>Найденные записи</h2>
-<table border="1">
-    <tr>
-        <th>ФИО пациента</th>
-        <th>Телефон пациента</th>
-        <th>ФИО врача</th>
-        <th>Кабинет</th>
-        <th>Место работы</th>
-        <th>Телефон врача</th>
-        <th>Дата приёма</th>
-        <th>Время приёма</th>
-        <th>Оказываемая услуга</th>
-        <th>Статус</th>
-        <th>Действие</th>
-        <th>Лекарства</th>
-    </tr>
-    {% for appointment in appointments %}
-    <tr>
-        <td>{{ appointment.patient.last_name }} {{ appointment.patient.first_name }} {{ appointment.patient.patronymic }}</td>
-        <td>{{ appointment.patient.phone }}</td>
-        <td>{{ appointment.doctor.last_name }} {{ appointment.doctor.first_name }} {{ appointment.doctor.patronymic }}</td>
-        <td>{{ appointment.doctor.cabinet }}</td>
-        <td>{{ appointment.doctor.workplace }}</td>
-        <td>{{ appointment.doctor.phone }}</td>
-        <td>{{ appointment.appointment_day.strftime("%d.%m.%Y") }}</td>
-        <td>{{ appointment.appointment_time }}</td>
-        <td>{{ appointment.service }}</td>
-        <td id="status-{{ appointment.id }}">{{ appointment.status }}</td>
-        <td>
-            <button class="status-btn" data-id="{{ appointment.id }}" data-status="Оказана" {% if appointment.status != "Ожидание" %}disabled{% endif %}>Услуга оказана</button>
-            <button class="status-btn" data-id="{{ appointment.id }}" data-status="Не оказана" {% if appointment.status != "Ожидание" %}disabled{% endif %}>Услуга не оказана</button>
-        </td>
-        <td>
-            <a href="/medications/{{ appointment.id }}" class="medications-btn">Назначенные лекарства</a>
-            <td>
-                <a href="/patients/{{ appointment.patient.id }}/documents" class="medications-btn">Документы</a>
-              </td>
-                         
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
+  {% if appointments %}
+    <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+      Найденные записи
+    </h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 transition-colors">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">ФИО пациента</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Телефон пациента</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">ФИО врача</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Кабинет</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Место работы</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Телефон врача</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Дата приёма</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Время приёма</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Услуга</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Статус</th>
+            <th class="px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300">Действие</th>
+            <th class="px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300">Лекарства</th>
+            <th class="px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300">Документы</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+          {% for appointment in appointments %}
+          <tr id="row-{{ appointment.id }}">
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.patient.last_name }} {{ appointment.patient.first_name }} {{ appointment.patient.patronymic }}
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.patient.phone }}
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.doctor.last_name }} {{ appointment.doctor.first_name }} {{ appointment.doctor.patronymic }}
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.doctor.cabinet }}
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.doctor.workplace }}
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.doctor.phone }}
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.appointment_day.strftime("%d.%m.%Y") }}
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.appointment_time }}
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.service }}
+            </td>
+            <td id="status-{{ appointment.id }}" class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+              {{ appointment.status }}
+            </td>
+            <td class="px-4 py-3 text-center space-x-2">
+              <button
+                class="px-3 py-1 bg-green-600 dark:bg-green-500 text-white text-sm font-medium rounded
+                       hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-colors"
+                data-id="{{ appointment.id }}"
+                data-status="Оказана"
+                {% if appointment.status != "Ожидание" %}disabled class="opacity-50 cursor-not-allowed"{% endif %}
+              >
+                Оказана
+              </button>
+              <button
+                class="px-3 py-1 bg-red-600 dark:bg-red-500 text-white text-sm font-medium rounded
+                       hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 transition-colors"
+                data-id="{{ appointment.id }}"
+                data-status="Не оказана"
+                {% if appointment.status != "Ожидание" %}disabled class="opacity-50 cursor-not-allowed"{% endif %}
+              >
+                Не оказана
+              </button>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <a
+                href="/medications/{{ appointment.id }}"
+                class="inline-block px-3 py-1 bg-blue-600 dark:bg-blue-500 text-white text-sm font-medium rounded
+                       hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+              >
+                Назначенные
+              </a>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <a
+                href="/patients/{{ appointment.patient.id }}/documents"
+                class="inline-block px-3 py-1 bg-gray-600 dark:bg-gray-500 text-white text-sm font-medium rounded
+                       hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors"
+              >
+                Документы
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</div>
 
 <script src="{{ url_for('static', path='/js/update_status.js') }}"></script>
-
 {% endblock %}

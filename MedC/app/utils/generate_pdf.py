@@ -71,7 +71,7 @@ def generate_medication_pdf(patient, doctor, appointment, medications):
     y = height - 410
     if medications:
         for idx, med in enumerate(medications, 1):
-            c.drawString(60, y, f"{idx}. {med.medication_name}, дозировка: {med.dosage}")
+            c.drawString(60, y, f"{idx}. {med.pharmacy_drug}, дозировка: {med.dosage}")
             y -= 20
     else:
         c.drawString(60, y, "Нет назначенных лекарств.")

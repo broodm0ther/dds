@@ -3,77 +3,166 @@
 {% block title %}Аптечка{% endblock %}
 
 {% block content %}
-<h2>Склад лекарств</h2>
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-lg
+            max-w-full sm:max-w-lg lg:max-w-5xl space-y-6 transition-colors">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100">
+    Склад лекарств
+  </h2>
 
-<!-- Поиск по названию -->
-<form method="get" action="/pharmacy" style="margin-bottom: 20px;">
-    <input type="text" name="search" placeholder="Поиск по названию..." value="{{ request.query_params.get('search', '') }}">
-    <button type="submit">Найти</button>
-</form>
+  <!-- Поиск по названию -->
+  <form method="get" action="/pharmacy" class="flex flex-col sm:flex-row items-center gap-2 mb-6">
+    <input
+      type="text"
+      name="search"
+      placeholder="Поиск по названию..."
+      value="{{ request.query_params.get('search', '') }}"
+      class="flex-1 sm:flex-none sm:w-1/3 rounded-md border border-gray-300 dark:border-gray-600
+             bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+             focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+    />
+    <button
+      type="submit"
+      class="w-full sm:w-auto px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white font-medium rounded-md
+             hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+    >
+      Найти
+    </button>
+  </form>
 
-<!-- Форма добавления препарата -->
-<form method="post" action="/pharmacy/add" style="margin-bottom: 30px;">
-    <label for="name">Название:</label>
-    <select name="name" required>
+  <!-- Форма добавления препарата -->
+  <form method="post" action="/pharmacy/add" class="space-y-4 mb-8">
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+        Название:
+      </label>
+      <select
+        id="name"
+        name="name"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      >
         {% for med in medications_list %}
-            <option value="{{ med }}">{{ med }}</option>
+          <option value="{{ med }}">{{ med }}</option>
         {% endfor %}
-    </select>
+      </select>
+    </div>
+    <div>
+      <label for="dosage" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+        Дозировка:
+      </label>
+      <input
+        type="text"
+        id="dosage"
+        name="dosage"
+        placeholder="например, 500 мг"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="instruction" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+        Инструкция:
+      </label>
+      <input
+        type="text"
+        id="instruction"
+        name="instruction"
+        placeholder="например, после еды"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+        Количество:
+      </label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity"
+        min="0"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <button
+      type="submit"
+      class="inline-flex items-center px-4 py-2 bg-green-600 dark:bg-green-500 text-white font-medium rounded-md
+             hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-colors"
+    >
+      Добавить препарат
+    </button>
+  </form>
 
-    <label for="dosage">Дозировка:</label>
-    <input type="text" name="dosage" placeholder="например, 500 мг" required>
-
-    <label for="instruction">Инструкция:</label>
-    <input type="text" name="instruction" placeholder="например, после еды" required>
-
-    <label for="quantity">Количество:</label>
-    <input type="number" name="quantity" min="0" required>
-
-    <button type="submit">Добавить препарат</button>
-</form>
-
-<!-- Таблица препаратов -->
-<h3 style="margin-bottom: 10px;">Текущие препараты:</h3>
-<table border="1" style="width: 100%; border-collapse: collapse;">
-    <thead>
+  <!-- Таблица препаратов -->
+  <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100">
+    Текущие препараты:
+  </h3>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors">
+      <thead class="bg-gray-50 dark:bg-gray-700">
         <tr>
-            <th>Название</th>
-            <th>Дозировка</th>
-            <th>Инструкция</th>
-            <th>Остаток</th>
-            <th>Пополнить</th>
-            <th>Удалить</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Название</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Дозировка</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Инструкция</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Остаток</th>
+          <th class="px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300">Пополнить</th>
+          <th class="px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300">Удалить</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
         {% for drug in drugs %}
-        <tr>
-            <td>{{ drug.name }}</td>
-            <td>{{ drug.dosage }}</td>
-            <td>{{ drug.instruction }}</td>
-            {% set color = "green" %}
-            {% if drug.quantity == 0 %}
-                {% set color = "red" %}
-            {% elif drug.quantity <= 5 %}
-                {% set color = "orange" %}
-            {% endif %}
-            
-            <td style="color: {{ color }};">{{ drug.quantity }}</td>
-            
+          {% if drug.quantity == 0 %}
+            {% set qty_class = 'text-red-600 dark:text-red-400' %}
+          {% elif drug.quantity <= 5 %}
+            {% set qty_class = 'text-orange-500 dark:text-orange-300' %}
+          {% else %}
+            {% set qty_class = 'text-green-600 dark:text-green-400' %}
+          {% endif %}
+          <tr>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">{{ drug.name }}</td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">{{ drug.dosage }}</td>
+            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">{{ drug.instruction }}</td>
+            <td class="px-4 py-3 text-sm font-medium {{ qty_class }}">{{ drug.quantity }}</td>
+            <td class="px-4 py-3">
+              <form method="post" action="/pharmacy/restock/{{ drug.id }}" class="flex items-center justify-center space-x-2">
+                <input
+                  type="number"
+                  name="quantity"
+                  min="1"
+                  required
+                  class="w-20 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700
+                         text-gray-900 dark:text-gray-100 p-1 focus:border-blue-500 dark:focus:border-blue-400
+                         focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+                />
+                <button
+                  type="submit"
+                  class="px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white font-medium rounded-md
+                         hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+                >+</button>
+              </form>
             </td>
-            <td>
-                <form method="post" action="/pharmacy/restock/{{ drug.id }}" style="display: flex; gap: 5px;">
-                    <input type="number" name="quantity" min="1" required style="width: 60px;">
-                    <button type="submit">+</button>
-                </form>
+            <td class="px-4 py-3 text-center">
+              <form method="post" action="/pharmacy/delete/{{ drug.id }}" onsubmit="return confirm('Удалить препарат?');">
+                <button
+                  type="submit"
+                  class="px-2 py-1 bg-red-600 dark:bg-red-500 text-white font-medium rounded-md
+                         hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 transition-colors"
+                >Удалить</button>
+              </form>
             </td>
-            <td>
-                <form method="post" action="/pharmacy/delete/{{ drug.id }}" onsubmit="return confirm('Удалить препарат?')">
-                    <button type="submit">Удалить</button>
-                </form>
-            </td>
-        </tr>
+          </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

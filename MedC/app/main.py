@@ -2,17 +2,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import Response, RedirectResponse
 from app.auth import create_access_token, get_current_user
 from sqlalchemy.orm import Session
 from .routes import (
     patient_router, 
     doctor_router, 
     html_router, 
+    public,
     appointment_router, 
     medication_router, 
     archive_router,
     document_router,
-    assistant_routes  # ✅ Добавлено
+    assistant_routes 
 )
 from . import models, schemas
 from .database import engine, get_db
@@ -35,6 +37,7 @@ app.add_middleware(
 )
 
 app.include_router(html_router)
+app.include_router(public.router)
 app.include_router(patient_router)
 app.include_router(doctor_router)
 app.include_router(appointment_router)
@@ -65,16 +68,26 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return {"message": "User created successfully"}
 
 @app.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def login(
+    response: Response,
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
     user = db.query(models.User).filter(models.User.username == form_data.username).first()
-    if not user:
+    if not user or not bcrypt.checkpw(form_data.password.encode('utf-8'), user.hashed_password.encode('utf-8')):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    if not bcrypt.checkpw(form_data.password.encode('utf-8'), user.hashed_password.encode('utf-8')):
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-
-    access_token = create_access_token(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer", "role": user.role}
+    token = create_access_token(data={"sub": user.username})
+    # Сохраняем в cookie, httponly для безопасности
+    response = RedirectResponse(url="/", status_code=302)
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        max_age=60 * 60,  # 1 час
+        path="/"
+    )
+    return response
 
 @app.get("/protected")
 def protected_route(current_user: models.User = Depends(get_current_user)):

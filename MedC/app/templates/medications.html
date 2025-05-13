@@ -3,47 +3,111 @@
 {% block title %}Лекарства{% endblock %}
 
 {% block content %}
-<h1>Лекарства</h1>
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-lg
+            max-w-full sm:max-w-2xl lg:max-w-4xl space-y-6 transition-colors">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+    Лекарства
+  </h1>
 
-<label for="patient_id">Выберите пациента:</label>
-<select id="patient_id" name="patient_id" required onchange="loadAppointments()">
-    <option value="" selected disabled>Выберите пациента</option>
-    {% for patient in patients %}
+  <div>
+    <label for="patient_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+      Выберите пациента:
+    </label>
+    <select
+      id="patient_id"
+      name="patient_id"
+      required
+      onchange="loadAppointments()"
+      class="block w-full sm:w-1/2 rounded-md border border-gray-300 dark:border-gray-600
+             bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+             focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+    >
+      <option value="" selected disabled>Выберите пациента</option>
+      {% for patient in patients %}
         <option value="{{ patient.id }}">{{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}</option>
-    {% endfor %}
-</select>
-
-<h2>Посещения врача</h2>
-<table border="1" id="appointments_table">
-    <tr>
-        <th>Врач</th>
-        <th>Специализация</th>
-        <th>Услуга</th>
-        <th>Дата</th>
-        <th>Время</th>
-        <th>Действие</th>
-    </tr>
-</table>
-
-<h2>Добавить лекарство</h2>
-<form id="medication_form" style="display: none;">
-    <label for="medication_name">Выберите лекарство:</label>
-    <select id="medication_name" name="medication_name" required>
-        <option value="" selected disabled>Выберите лекарство</option>
-        {% for med in medications_list %}
-            <option value="{{ med }}">{{ med }}</option>
-        {% endfor %}
+      {% endfor %}
     </select>
+  </div>
 
-    <label for="dosage">Дозировка:</label>
-    <input type="text" id="dosage" name="dosage" required>
+  <div>
+    <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+      Посещения врача
+    </h2>
+    <div class="overflow-x-auto">
+      <table id="appointments_table"
+             class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Врач</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Специализация</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Услуга</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Дата</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Время</th>
+            <th class="px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300">Действие</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <!-- JS will populate rows here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    <input type="hidden" id="selected_appointment_id" name="appointment_id">
-    <input type="hidden" id="selected_patient_id" name="patient_id">
+  <div>
+    <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+      Добавить лекарство
+    </h2>
+    <form
+      id="medication_form"
+      class="hidden space-y-4"
+    >
+      <div>
+        <label for="medication_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Выберите лекарство:
+        </label>
+        <select
+          id="medication_name"
+          name="medication_name"
+          required
+          class="block w-full rounded-md border border-gray-300 dark:border-gray-600
+                 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+                 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+        >
+          <option value="" selected disabled>Выберите лекарство</option>
+          {% for med in medications_list %}
+            <option value="{{ med }}">{{ med }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <button type="submit">Добавить лекарство</button>
-</form>
+      <div>
+        <label for="dosage" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Дозировка:
+        </label>
+        <input
+          type="text"
+          id="dosage"
+          name="dosage"
+          required
+          class="block w-full rounded-md border border-gray-300 dark:border-gray-600
+                 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+                 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+        />
+      </div>
+
+      <input type="hidden" id="selected_appointment_id" name="appointment_id">
+      <input type="hidden" id="selected_patient_id" name="patient_id">
+
+      <button
+        type="submit"
+        class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white font-medium rounded-md
+               hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      >
+        Добавить лекарство
+      </button>
+    </form>
+  </div>
+</div>
 
 <script src="{{ url_for('static', path='/js/medications.js') }}"></script>
-
 {% endblock %}

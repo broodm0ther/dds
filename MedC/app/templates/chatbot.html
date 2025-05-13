@@ -1,0 +1,89 @@
+<!-- app/templates/chatbot.html -->
+{% extends "base.html" %}
+
+{% block title %}Чат-бот{% endblock %}
+
+{% block content %}
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-lg
+            max-w-full sm:max-w-xl lg:max-w-3xl space-y-6">
+  <h1 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+    Чат-бот
+  </h1>
+
+  <!-- Подсказки для команд -->
+  <div class="mb-4 p-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded">
+    <p class="text-sm text-blue-700 dark:text-blue-300">
+      Доступные команды:
+      <strong>привет</strong> — поздороваться,
+      <strong>помощь</strong> — список команд,
+      <strong>время</strong> — текущее время,
+      <strong>дата</strong> — текущая дата
+    </p>
+  </div>
+
+  <div id="chat-window"
+       class="h-64 sm:h-96 overflow-y-auto border border-gray-300 dark:border-gray-600
+              bg-gray-50 dark:bg-gray-900 p-4 rounded mb-4 text-gray-800 dark:text-gray-100">
+    <!-- сообщения будут добавляться здесь -->
+  </div>
+
+  <form id="chat-form" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+    <input
+      type="text"
+      id="user-input"
+      placeholder="Введите сообщение..."
+      class="flex-1 w-full rounded-md sm:rounded-l-md border border-gray-300 dark:border-gray-600
+             bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+             focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
+      autocomplete="off"
+      required
+    />
+    <button
+      type="submit"
+      class="w-full sm:w-auto px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white font-medium rounded-md
+             hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+    >
+      Отправить
+    </button>
+  </form>
+</div>
+
+<script>
+  const chatWindow = document.getElementById('chat-window');
+  const chatForm   = document.getElementById('chat-form');
+  const userInput  = document.getElementById('user-input');
+  const patientId  = 1; // TODO: заменить на реальный ID
+
+  function appendMessage(text, sender) {
+    const msg = document.createElement('div');
+    msg.className = sender === 'user'
+      ? 'text-right text-blue-700 dark:text-blue-300 mb-2'
+      : 'text-left text-gray-800 dark:text-gray-200 mb-2';
+    msg.textContent = text;
+    chatWindow.appendChild(msg);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  chatForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const text = userInput.value.trim();
+    if (!text) return;
+    appendMessage(text, 'user');
+    userInput.value = '';
+
+    try {
+      const res = await fetch('/assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patient_id: patientId, command: text })
+      });
+      if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
+      const data = await res.json();
+      appendMessage(data.response, 'bot');
+    } catch (err) {
+      appendMessage('Ошибка сервера, попробуйте позже.', 'bot');
+      console.error(err);
+    }
+  });
+</script>
+{% endblock %}

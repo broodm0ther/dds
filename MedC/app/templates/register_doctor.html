@@ -1,50 +1,156 @@
-<!-- app/templates/register_doctor.html -->
 {% extends "base.html" %}
 
 {% block title %}Регистрация врача{% endblock %}
 
 {% block content %}
-<h1>Регистрация врача</h1>
-<form action="/register/doctor" method="post">
-    <label for="last_name">Фамилия:</label>
-    <input type="text" id="last_name" name="last_name" required><br><br>
-    
-    <label for="first_name">Имя:</label>
-    <input type="text" id="first_name" name="first_name" required><br><br>
-    
-    <label for="patronymic">Отчество:</label>
-    <input type="text" id="patronymic" name="patronymic" required><br><br>
-    
-    <label for="specialization">Специализация:</label>
-    <select id="specialization" name="specialization" required>
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-lg
+            max-w-full sm:max-w-md lg:max-w-2xl space-y-6 transition-colors">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+    Регистрация врача
+  </h1>
+  <form action="/register/doctor" method="post" class="space-y-4">
+    <div>
+      <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Фамилия:
+      </label>
+      <input
+        type="text"
+        id="last_name"
+        name="last_name"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Имя:
+      </label>
+      <input
+        type="text"
+        id="first_name"
+        name="first_name"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="patronymic" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Отчество:
+      </label>
+      <input
+        type="text"
+        id="patronymic"
+        name="patronymic"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="specialization" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Специализация:
+      </label>
+      <select
+        id="specialization"
+        name="specialization"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      >
         {% for spec in specializations %}
-            <option value="{{ spec }}">{{ spec }}</option>
+          <option value="{{ spec }}">{{ spec }}</option>
         {% endfor %}
-    </select><br><br>
-    
-    <label for="cabinet">Кабинет:</label>
-    <select id="cabinet" name="cabinet" required>
+      </select>
+    </div>
+    <div>
+      <label for="cabinet" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Кабинет:
+      </label>
+      <select
+        id="cabinet"
+        name="cabinet"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      >
         {% for cab in cabinets %}
-            <option value="{{ cab }}">{{ cab }}</option>
+          <option value="{{ cab }}">{{ cab }}</option>
         {% endfor %}
-    </select><br><br>
-    
-    <label for="date_of_birth">Дата рождения:</label>
-    <input type="date" id="date_of_birth" name="date_of_birth" required><br><br>
-    
-    <label for="phone">Телефон:</label>
-    <input type="text" id="phone" name="phone" required><br><br>
-    
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required><br><br>
-    
-    <label for="workplace">Место работы:</label>
-    <select id="workplace" name="workplace" required>
+      </select>
+    </div>
+    <div>
+      <label for="date_of_birth" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Дата рождения:
+      </label>
+      <input
+        type="date"
+        id="date_of_birth"
+        name="date_of_birth"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Телефон:
+      </label>
+      <input
+        type="text"
+        id="phone"
+        name="phone"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Email:
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="workplace" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Место работы:
+      </label>
+      <select
+        id="workplace"
+        name="workplace"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      >
         {% for addr in workplaces %}
-            <option value="{{ addr }}">{{ addr }}</option>
+          <option value="{{ addr }}">{{ addr }}</option>
         {% endfor %}
-    </select><br><br>
-    
-    <button type="submit">Зарегистрировать</button>
-</form>
+      </select>
+    </div>
+    <button
+      type="submit"
+      class="w-full inline-flex justify-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white font-medium rounded-md
+             hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+    >
+      Зарегистрировать
+    </button>
+  </form>
+</div>
 {% endblock %}

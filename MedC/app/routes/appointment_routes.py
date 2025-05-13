@@ -1,12 +1,14 @@
 # routes/appointment_routes.py
 
 from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from datetime import date
 from app.auth import require_roles
 from app.database import get_db
 from app.models import Appointment, AppointmentHistory
 from app.utils.audit_logger import log_action
+import app.models as models
 
 router = APIRouter()
 
@@ -17,15 +19,29 @@ def list_appointments(request: Request, db: Session = Depends(get_db), current_u
     return db.query(Appointment).all()
 
 
-@router.post("/register/appointment")
-def create_appointment(request: Request, appointment: dict, db: Session = Depends(get_db), current_user=Depends(require_roles("admin", "registrar"))):
-    log_action(db, current_user.username, "create_appointment", request.url.path)
-    new = Appointment(**appointment)
-    db.add(new)
-    db.commit()
-    db.refresh(new)
-    return new
 
+# Получить записи пациента (AJAX)
+@router.get("/get_appointments/{patient_id}", response_class=JSONResponse)
+def get_appointments(patient_id: int, db: Session = Depends(get_db)):
+    appts = (
+        db.query(models.Appointment)
+          .filter(models.Appointment.patient_id == patient_id,
+                  models.Appointment.appointment_day >= date.today())
+          .order_by(models.Appointment.appointment_day.desc())
+          .all()
+    )
+    data = [
+        {
+            "id": a.id,
+            "doctor": f"{a.doctor.last_name} {a.doctor.first_name}",
+            "specialization": a.doctor.specialization,
+            "service": a.service,
+            "date": a.appointment_day.strftime("%d.%m.%Y"),
+            "time": a.appointment_time
+        }
+        for a in appts
+    ]
+    return JSONResponse(content=data)
 
 @router.patch("/appointments/{id}/status")
 def update_appointment_status(id: int, payload: dict, request: Request, db: Session = Depends(get_db), current_user=Depends(require_roles("admin", "doctor"))):

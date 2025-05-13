@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация пользователя{% endblock %}
+
+{% block content %}
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-lg
+            max-w-full sm:max-w-sm lg:max-w-md space-y-6 transition-colors">
+  <h1 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+    Регистрация
+  </h1>
+  <form id="register-form" class="space-y-4">
+    <div>
+      <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Логин
+      </label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Пароль
+      </label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
+    <div>
+      <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Роль
+      </label>
+      <select
+        id="role"
+        name="role"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      >
+        <option value="user">Пользователь</option>
+        <option value="doctor">Доктор</option>
+        <option value="registrar">Регистратор</option>
+      </select>
+    </div>
+    <button
+      type="submit"
+      class="w-full inline-flex justify-center px-4 py-2 bg-green-600 dark:bg-green-500 text-white font-medium rounded-md
+             hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-colors"
+    >
+      Зарегистрироваться
+    </button>
+  </form>
+  <p class="mt-4 text-sm text-gray-600 dark:text-gray-400 text-center">
+    Уже есть аккаунт?
+    <a href="/login" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors">
+      Войти
+    </a>
+  </p>
+</div>
+
+<script>
+document.getElementById('register-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const data = {
+    username: e.target.username.value,
+    password: e.target.password.value,
+    role: e.target.role.value
+  };
+  const res = await fetch('/register_user', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  });
+  if (res.ok) {
+    alert('Пользователь создан');
+    window.location = '/login';
+  } else {
+    const err = await res.json();
+    alert(err.detail || 'Ошибка регистрации');
+  }
+});
+</script>
+{% endblock %}

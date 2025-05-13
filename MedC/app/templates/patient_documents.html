@@ -3,42 +3,105 @@
 {% block title %}Документы пациента{% endblock %}
 
 {% block content %}
-<h2>Документы: {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}</h2>
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-lg
+            max-w-full sm:max-w-lg lg:max-w-4xl space-y-6 transition-colors">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100">
+    Документы: {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}
+  </h2>
 
-<form action="/patients/{{ patient.id }}/documents" method="post" enctype="multipart/form-data" style="margin-bottom: 20px;">
-    <label>Выберите файл:</label>
-    <input type="file" name="file" required>
+  <form action="/patients/{{ patient.id }}/documents"
+        method="post"
+        enctype="multipart/form-data"
+        class="space-y-4 mb-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Выберите файл:
+      </label>
+      <input
+        type="file"
+        name="file"
+        required
+        class="mt-1 block w-full text-sm text-gray-700 dark:text-gray-100
+               file:bg-gray-50 dark:file:bg-gray-700 file:border file:border-gray-300 dark:file:border-gray-600
+               file:rounded-md file:py-2 file:px-3 file:text-sm file:font-normal
+               focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      />
+    </div>
 
-    <label>Тип документа:</label>
-    <select name="category" required>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Тип документа:
+      </label>
+      <select
+        name="category"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2
+               focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+      >
         <option value="Анализы">Анализы</option>
         <option value="УЗИ">УЗИ</option>
         <option value="ЭКГ">ЭКГ</option>
         <option value="Рентген">Рентген</option>
         <option value="Прочее">Прочее</option>
-    </select>
+      </select>
+    </div>
 
-    <button type="submit">Загрузить</button>
-</form>
+    <button
+      type="submit"
+      class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white font-medium
+             rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+    >
+      Загрузить
+    </button>
+  </form>
 
-{% if documents and documents|length > 0 %}
-    <h3>Загруженные документы:</h3>
+  {% if documents and documents|length > 0 %}
+    <div class="space-y-4">
+      <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100">
+        Загруженные документы:
+      </h3>
 
-    {% for category, docs in documents|groupby('category') %}
-        <h4>{{ category }}</h4>
-        <ul>
-            {% for doc in docs %}
-                <li>
-                    <a href="/static/uploads/{{ patient.id }}/{{ doc.category }}/{{ doc.filename }}" target="_blank">
-                        {{ doc.original_name }}
-                    </a>
-                    ({{ doc.upload_date.strftime("%d.%m.%Y %H:%M") }})
-                    <form method="post" action="/patients/{{ patient.id }}/documents/{{ doc.id }}/delete" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Удалить документ?');">Удалить</button>
-                    </form>
-                </li>
-            {% endfor %}
+      {% for category, docs in documents|groupby('category') %}
+      <div>
+        <h4 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-4">
+          {{ category }}
+        </h4>
+        <ul class="list-disc list-inside space-y-2 mt-2">
+          {% for doc in docs %}
+          <li class="flex items-center justify-between">
+            <div>
+              <a
+                href="/static/uploads/{{ patient.id }}/{{ doc.category }}/{{ doc.filename }}"
+                target="_blank"
+                class="text-blue-600 dark:text-blue-400 hover:underline transition-colors"
+              >
+                {{ doc.original_name }}
+              </a>
+              <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                ({{ doc.upload_date.strftime("%d.%m.%Y %H:%M") }})
+              </span>
+            </div>
+            <form
+              method="post"
+              action="/patients/{{ patient.id }}/documents/{{ doc.id }}/delete"
+              class="inline"
+            >
+              <button
+                type="submit"
+                onclick="return confirm('Удалить документ?');"
+                class="inline-flex items-center px-2 py-1 bg-red-600 dark:bg-red-500 text-white text-sm font-medium
+                       rounded-md hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 transition-colors"
+              >
+                Удалить
+              </button>
+            </form>
+          </li>
+          {% endfor %}
         </ul>
-    {% endfor %}
-{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

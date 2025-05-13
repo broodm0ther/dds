@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Запись на приём{% endblock %}
+
+{% block content %}
+<div class="mx-auto p-6 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-lg space-y-6
+            max-w-full sm:max-w-md lg:max-w-2xl">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+    Запись на приём
+  </h1>
+  <form action="/register/appointment" method="post" class="space-y-4">
+    <div>
+      <label for="patient_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Выберите пациента:
+      </label>
+      <select
+        id="patient_id"
+        name="patient_id"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100
+               p-2 focus:border-blue-500 dark:focus:border-blue-400
+               focus:ring-blue-500 dark:focus:ring-blue-400"
+      >
+        {% for patient in patients %}
+          <option value="{{ patient.id }}">{{ patient.last_name }} {{ patient.first_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label for="doctor_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Выберите врача:
+      </label>
+      <select
+        id="doctor_id"
+        name="doctor_id"
+        required
+        data-services='{{ services_by_specialization | tojson | safe }}'
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100
+               p-2 focus:border-blue-500 dark:focus:border-blue-400
+               focus:ring-blue-500 dark:focus:ring-blue-400"
+      >
+        <option value="" selected disabled>Выберите врача</option>
+        {% for doctor in doctors %}
+          <option
+            value="{{ doctor.id }}"
+            data-specialization="{{ doctor.specialization }}"
+          >
+            {{ doctor.last_name }} {{ doctor.first_name }} — {{ doctor.specialization }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label for="service_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Выберите услугу:
+      </label>
+      <select
+        id="service_id"
+        name="service_id"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100
+               p-2 focus:border-blue-500 dark:focus:border-blue-400
+               focus:ring-blue-500 dark:focus:ring-blue-400"
+      >
+        <option value="" selected disabled>Сначала выберите врача</option>
+      </select>
+      <input type="hidden" id="selected_service" name="service">
+    </div>
+
+    <div>
+      <label for="appointment_day" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Дата приёма:
+      </label>
+      <input
+        type="date"
+        id="appointment_day"
+        name="appointment_day"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100
+               p-2 focus:border-blue-500 dark:focus:border-blue-400
+               focus:ring-blue-500 dark:focus:ring-blue-400"
+      />
+    </div>
+
+    <div>
+      <label for="appointment_time" class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+        Время приёма:
+      </label>
+      <input
+        type="time"
+        id="appointment_time"
+        name="appointment_time"
+        required
+        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600
+               bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100
+               p-2 focus:border-blue-500 dark:focus:border-blue-400
+               focus:ring-blue-500 dark:focus:ring-blue-400"
+      />
+    </div>
+
+    <button
+      type="submit"
+      class="w-full sm:w-auto inline-flex justify-center px-4 py-2 bg-blue-600 dark:bg-blue-500
+             text-white font-medium rounded-md hover:bg-blue-700 dark:hover:bg-blue-600
+             focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+    >
+      Записать
+    </button>
+  </form>
+</div>
+
+<script src="{{ url_for('static', path='/js/update_services.js') }}"></script>
+{% endblock %}
